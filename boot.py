@@ -7,7 +7,7 @@ import micropython
 micropython.alloc_emergency_exception_buf(100)
 pycom.heartbeat(False)
 pycom.rgbled(0xff0000)
-print('=== Exo Sense Py - LoRaWAN - v1.1.0 ===')
+print('=== Exo Sense Py - LoRaWAN - v1.1.1 ===')
 
 wdt = WDT(timeout=30000)
 

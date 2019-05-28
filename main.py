@@ -1,3 +1,7 @@
+last_send = None
+buzzer_start = 0
+buzzer_ms = 0
+
 def _set_config(attr, def_val):
     val = getattr(config, attr, def_val)
     setattr(config, attr, val)
@@ -22,10 +26,7 @@ try:
     import cayenneLPP
     import ubinascii
     import struct
-
-    last_send = None
-    buzzer_start = 0
-    buzzer_ms = 0
+    import crypto
 
     _set_config('TEMP_OFFSET', 0)
     _set_config('ELEVATION', 0)
@@ -78,11 +79,15 @@ try:
 
     lpp = cayenneLPP.CayenneLPP(size=100, sock=s)
 
+    config.LORA_SEND_INTERVAL *= 1000
+
+    print("Waiting...")
+    # Sleep random time up to 7 seconds
+    time.sleep_ms(((crypto.getrandbits(32)[0] << 8) | crypto.getrandbits(32)[0]) % 7000)
+
     thpa_read_ok = exo.thpa.read()
     start_time = time.ticks_ms();
     last_thpa_read = start_time
-
-    config.LORA_SEND_INTERVAL *= 1000
 
     print("Starting loop")
     pycom.rgbled(0x000000)
@@ -106,6 +111,9 @@ try:
             exo.buzzer(0)
 
         if thpa_read_ok and (last_send == None or time.ticks_diff(last_send, now) >= config.LORA_SEND_INTERVAL):
+            # Sleep random time up to 255 ms
+            time.sleep_ms(crypto.getrandbits(32)[0])
+
             lpp.add_digital_input(exo.DI1(), channel=101)
             lpp.add_digital_input(exo.DI2(), channel=102)
             lpp.add_digital_output(exo.DO1(), channel=111)
