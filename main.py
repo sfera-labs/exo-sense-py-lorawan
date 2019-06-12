@@ -14,19 +14,19 @@ except Exception:
     config = Config()
 
 try:
-    from network import WLAN
-    from exosense import ExoSense
-    from exosense import thpa_const
-    from network import LoRa
+    import sys
     import time
     import socket
-    import sys
     import micropython
     import pycom
-    import cayenneLPP
     import ubinascii
     import struct
     import crypto
+    from network import WLAN
+    from network import LoRa
+    from exosense import ExoSense
+    from exosense import thpa_const
+    import cayenneLPP
 
     _set_config('TEMP_OFFSET', 0)
     _set_config('ELEVATION', 0)
@@ -45,7 +45,7 @@ try:
     exo.light.init()
     exo.thpa.init(temp_offset=(config.TEMP_OFFSET - 5), elevation=config.ELEVATION)
 
-    lora = LoRa(mode=LoRa.LORAWAN, region=getattr(LoRa, config.LORA_REGION))
+    lora = LoRa(mode=LoRa.LORAWAN, region=getattr(LoRa, config.LORA_REGION), device_class=LoRa.CLASS_C)
 
     wdt.init(timeout=300000)
     wdt.feed()
@@ -142,7 +142,7 @@ try:
                 pycom.rgbled(0x000000)
 
         try:
-            rx, port = s.recvfrom(256)
+            rx, port = s.recvfrom(16)
             if rx:
                 print('Received: {}, on port: {}'.format(rx, port))
                 if len(rx) == 4 and rx[3] == 0xff:
