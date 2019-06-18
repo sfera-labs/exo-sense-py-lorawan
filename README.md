@@ -46,6 +46,7 @@ Downlink commands, encoded in Cayenne LLP format, can be sent at any time to cha
 |21|Analog Input|U|DI2 counter, increased on every rising edge. Range: 0-327 (rolls back to 0 after 327)|
 |30|Digital Output|U/D|DO1 state|
 |50|Analog Output|D|Activate the buzzer for the specified time in 0.1sec (e.g. 3 = 300ms, 10 = 1s)|
+|51|Digital Input|U|Buzzer feedback: value flipped every time the buzzer is activated|
 |101|Temperature|U|Measured temperature|
 |102|Relative Humidity|U|Measured relative humidity|
 |103|Barometric Pressure|U|Measured atmospheric pressure|
