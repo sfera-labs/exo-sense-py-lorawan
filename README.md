@@ -43,6 +43,7 @@ Downlink commands, encoded in Cayenne LLP format, can be sent at any time to cha
 |10|Digital Input|U|DI1 state|
 |11|Analog Input|U|DI1 counter, increased on every rising edge. Range: 0-327 (rolls back to 0 after 327)|
 |20|Digital Input|U|DI2 state|
+|21|Analog Input|U|DI2 counter, increased on every rising edge. Range: 0-327 (rolls back to 0 after 327)|
 |30|Digital Output|U/D|DO1 state|
 |50|Analog Output|D|Activate the buzzer for the specified time in 0.1sec (e.g. 3 = 300ms, 10 = 1s)|
 |101|Temperature|U|Measured temperature|
@@ -53,4 +54,4 @@ Downlink commands, encoded in Cayenne LLP format, can be sent at any time to cha
 |121|Analog Input|U|Average of measured noise intensity since last uplink|
 |122|Analog Input|U|Minimum measured noise intensity since last uplink|
 |123|Analog Input|U|Maximum measured noise intensity since last uplink|
-|99|Analog Input|U|Initialization frame sent 3 times at random interval at start up. The value is a progression from 1 to 3|
+|99|Analog Input|U|Initialization frame sent 3 times at random intervals at start up. The value is a progression from 1 to 3|
