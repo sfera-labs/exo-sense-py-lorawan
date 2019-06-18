@@ -33,7 +33,7 @@ try:
     from network import LoRa
     from exosense import ExoSense
     from exosense import thpa_const
-    import cayenneLPP
+    from cayenneLPP import cayenneLPP
 
     _set_config('TEMP_OFFSET', 0)
     _set_config('ELEVATION', 0)
@@ -77,7 +77,7 @@ try:
         pycom.rgbled(0xff0000 if blink else 0x000000)
         time.sleep(0.5)
 
-    pycom.rgbled(0xff0000)
+    pycom.rgbled(0x00ff00)
 
     wdt.init(timeout=30000)
     wdt.feed()
@@ -201,7 +201,7 @@ try:
             lpp.add_analog_input(sound_max / 100, channel=123)
 
             if config.LORA_LED:
-                pycom.rgbled(0x000050)
+                pycom.rgbled(0x500030)
 
             try:
                 print("Sending")
