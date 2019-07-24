@@ -6,11 +6,11 @@ This code includes this [CayenneLPP library](https://github.com/jojo-/py-cayenne
 
 ## Connecting to Exo Sense
 
-Power up Exo Sense, it will start up with a WiFi access point enabled. If the module has never been configured, the WiFi name will be "lopy4-wlan-" followed by a number and the password will be "www.pycom.io". If this firmware was previously uploaded, the access point name and password are those specified in the uploaded configuration file (see below); the default WiFi name is "ExoSenseAP" and the default password is "exosense". This firmware will disable the access point after 5 minutes from power up (unless test mode is enabled, see configuration).
+Power up Exo Sense, it will start up with a WiFi access point enabled. If the module has never been configured, the WiFi name will be "lopy4-wlan-" followed by a number and the password will be `www.pycom.io`. If this firmware was previously uploaded, the access point name and password are those specified in the uploaded configuration file (see below); the default WiFi name is "ExoSenseAP" and the default password is "exosense". This firmware will disable the access point after 5 minutes from power up (unless test mode is enabled, see configuration).
 
 Join the access point network and use any FTP client to connect to `ftp://192.168.4.1`. Use plain FTP (no encryption) in passive mode, limiting the max number of connections to one. If using FileZilla, check [this page](https://docs.pycom.io/gettingstarted/programming/ftp.html#filezilla).
 
-For non-configured modules use "micro" as username and "python" as password. For modules using this firmware use the previously configured credentials; the default ones are "exo" as username and "sense" as password.
+For non-configured modules use "micro" as username and "python" as password. For modules using this firmware use the previously configured credentials; the default ones are `exo` as username and `sense` as password.
 
 To install this firmware, just upload the content of this repo into the `/flash` directory.
 
@@ -19,6 +19,8 @@ To install this firmware, just upload the content of this repo into the `/flash`
 All configuration parameters are in the [config.py](config.py) file, together with their documentation.
 
 To modify the configuration, restart Exo Sense, join its WiFi access point, download the file via FTP, edit it, re-upload it and restart Exo Sense.
+
+When Exo is configured to use OTAA as activation method, the DevEUI used will be written to a file named `deveui.txt`.
 
 ## LED status table
 
