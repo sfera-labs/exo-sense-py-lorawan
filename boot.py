@@ -16,3 +16,5 @@ wlan.deinit()
 
 ftp = Server()
 ftp.deinit()
+
+time.sleep(1)

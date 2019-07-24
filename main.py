@@ -68,6 +68,9 @@ try:
     except Exception:
         app_eui = ubinascii.unhexlify(config.OTAA_APP_EUI)
         app_key = ubinascii.unhexlify(config.OTAA_APP_KEY)
+        f = open('deveui.txt', 'w')
+        f.write(ubinascii.hexlify(lora.mac()).decode('ascii'))
+        f.close()
         lora.join(activation=LoRa.OTAA, auth=(app_eui, app_key), timeout=0)
         print("Using OTAA")
 
