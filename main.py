@@ -97,6 +97,8 @@ try:
 
     lpp = cayenneLPP.CayenneLPP(size=100, sock=s)
 
+    if config.LORA_SEND_INTERVAL < 10:
+        config.LORA_SEND_INTERVAL = 10
     config.LORA_SEND_INTERVAL *= 1000
 
     print("Waiting...")
@@ -123,6 +125,8 @@ try:
 
     print("Starting loop")
     pycom.rgbled(0x000000)
+
+    send_toggle = False
 
     while True:
         now = time.ticks_ms()
@@ -187,27 +191,37 @@ try:
         if exo.buzzer() and time.ticks_diff(buzzer_start, now) >= buzzer_ms:
             exo.buzzer(0)
 
-        if thpa_read_ok and (last_send == None or time.ticks_diff(last_send, now) >= config.LORA_SEND_INTERVAL):
+        if thpa_read_ok and (last_send == None or time.ticks_diff(last_send, now) >= config.LORA_SEND_INTERVAL / 2):
             # Sleep random time up to 255 ms
             time.sleep_ms(crypto.getrandbits(32)[0])
 
             lpp.reset_payload()
-            lpp.add_digital_input(DI1_deb_val, channel=10)
-            lpp.add_analog_input(DI1_deb_count, channel=11)
-            lpp.add_digital_input(DI2_deb_val, channel=20)
-            lpp.add_analog_input(DI2_deb_count, channel=21)
-            lpp.add_digital_output(exo.DO1(), channel=30)
-            lpp.add_digital_input(buzzer_flip, channel=51)
-            lpp.add_temperature(exo.thpa.temperature(), channel=101)
-            lpp.add_relative_humidity(exo.thpa.humidity(), channel=102)
-            lpp.add_barometric_pressure(exo.thpa.pressure(), channel=103)
-            gas = exo.thpa.gas_resistance()
-            if gas:
-                lpp.add_analog_input(gas / 10000, channel=104)
-            lpp.add_luminosity(exo.light.lux(), channel=111)
-            lpp.add_analog_input(sound_avg / 100, channel=121)
-            lpp.add_analog_input(sound_min / 100, channel=122)
-            lpp.add_analog_input(sound_max / 100, channel=123)
+
+            if send_toggle:
+                lpp.add_digital_input(DI1_deb_val, channel=10)
+                lpp.add_analog_input(DI1_deb_count, channel=11)
+                lpp.add_digital_input(DI2_deb_val, channel=20)
+                lpp.add_analog_input(DI2_deb_count, channel=21)
+                lpp.add_digital_output(exo.DO1(), channel=30)
+                lpp.add_digital_input(buzzer_flip, channel=51)
+                lpp.add_temperature(exo.thpa.temperature(), channel=101)
+                lpp.add_relative_humidity(exo.thpa.humidity(), channel=102)
+                lpp.add_barometric_pressure(exo.thpa.pressure(), channel=103)
+            else:
+                gas = exo.thpa.gas_resistance()
+                iaq = exo.thpa.iaq()
+                iaq_trend = exo.thpa.iaq_trend()
+                if gas:
+                    lpp.add_analog_input(gas / 10000, channel=104)
+                if iaq:
+                    lpp.add_analog_input(iaq / 10, channel=105)
+                if iaq_trend:
+                    lpp.add_analog_input(iaq_trend, channel=106)
+
+                lpp.add_luminosity(exo.light.lux(), channel=111)
+                lpp.add_analog_input(sound_avg / 100, channel=121)
+                lpp.add_analog_input(sound_min / 100, channel=122)
+                lpp.add_analog_input(sound_max / 100, channel=123)
 
             if config.LORA_LED:
                 pycom.rgbled(0x500030)
@@ -216,6 +230,7 @@ try:
                 print("Sending")
                 lpp.send()
                 last_send = time.ticks_ms()
+                send_toggle = not send_toggle
                 sound_min = sound_max = sound_avg = sound_val
                 sound_samples = 1
             except OSError as e:
