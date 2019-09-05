@@ -41,6 +41,7 @@ try:
     _set_config('LORA_LED', True)
     _set_config('MODE_TEST', False)
     _set_config('DI_DEBOUNCE_MS', 50)
+    _set_config('LORA_STATE_PERSIST', True)
 
     if config.FTP_USER and config.FTP_PASSWORD:
         if config.AP_SSID and config.AP_PASSWORD:
@@ -58,6 +59,11 @@ try:
 
     wdt.init(timeout=300000)
     wdt.feed()
+
+    if config.LORA_STATE_PERSIST:
+        lora.nvram_restore()
+    else:
+        lora.nvram_erase()
 
     try:
         dev_addr = struct.unpack(">l", ubinascii.unhexlify(config.ABP_DEV_ADDR))[0]
@@ -218,6 +224,9 @@ try:
             if config.LORA_LED:
                 time.sleep_ms(200)
                 pycom.rgbled(0x000000)
+
+            if config.LORA_STATE_PERSIST:
+                lora.nvram_save()
 
         try:
             rx, port = s.recvfrom(16)

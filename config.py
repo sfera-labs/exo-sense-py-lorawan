@@ -12,6 +12,8 @@ LORA_DR = 5 # Data rate: 0 to 5
 
 LORA_SEND_INTERVAL = 20 # Inteval in seconds between state uplinks
 
+LORA_STATE_PERSIST = True # Set to True to persist the LoRaWAN state (joined status, frame counters, etc) in non-volatile memory in order to retain it across power cycles.
+
 LORA_LED = True # Set to True to have the LED light flash when state uplinks are transmitted. False to disable it.
 
 TEMP_OFFSET = 0 # Temperature offset (°C)
