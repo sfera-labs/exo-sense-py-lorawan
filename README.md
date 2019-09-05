@@ -53,8 +53,23 @@ Downlink commands, encoded in Cayenne LLP format, can be sent at any time to cha
 |102|Relative Humidity|U|Measured relative humidity|
 |103|Barometric Pressure|U|Measured atmospheric pressure|
 |104|Analog Input|U|Air resistance (quality indication) in 10K&#8486; (e.g. 12 = 120K&#8486;)|
+|105|Analog Input|U|IAQ index (see [below](#iaq-index))|
+|106|Analog Input|U|IAQ trend: a positive value represents an IAQ improvement, a negative value an IAQ worsening, a value of zero represents a stable IAQ|
 |111|Luminosity|U|Measured luminosity|
 |121|Analog Input|U|Average of measured noise intensity since last uplink|
 |122|Analog Input|U|Minimum measured noise intensity since last uplink|
 |123|Analog Input|U|Maximum measured noise intensity since last uplink|
 |99|Analog Input|U|Initialization frame sent 3 times at random intervals at start up. The value is a progression from 1 to 3|
+
+### IAQ index
+
+IAQ (Indoor Air Quality) index description:
+
+|IAQ index|Air Quality|
+|:-------:|:---------:|
+|0-5|Good|
+|5.1-10|Average|
+|10.1-15|Little bad|
+|15.1-20|Bad|
+|20.1-30|Worse|
+|30.1-50|Very bad|
