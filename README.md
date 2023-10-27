@@ -1,6 +1,6 @@
 # Exo Sense Py LoRaWAN
 
-This firmware lets you use [Exo Sense Py](https://www.sferalabs.cc/exo-sense-py/) equipped with a LoPy board as a LoRaWAN Class A/C end-device, sending environmental data encoded with the Cayenne LPP format.
+This firmware lets you use [Exo Sense Py](https://www.sferalabs.cc/product/exo-sense-py/) equipped with a LoPy board as a LoRaWAN Class A/C end-device, sending environmental data encoded with the Cayenne LPP format.
 
 This code includes this [CayenneLPP library](https://github.com/jojo-/py-cayenne-lpp) by Johan.
 
