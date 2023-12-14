@@ -34,7 +34,7 @@ When Exo is configured to use OTAA as activation method, the DevEUI used will be
 
 ## LoRaWAN Communication
 
-When configured, Exo Sense will start sending unconfirmed state uplinks periodically, with the interval specified in the configuration. The packet payload is encoded using the [Cayenne LPP format](https://mydevices.com/cayenne/docs/lora/#lora-cayenne-low-power-payload).
+When configured, Exo Sense will start sending unconfirmed state uplinks periodically, with the interval specified in the configuration. The packet payload is encoded using the [Cayenne LPP format](https://docs.mydevices.com/docs/lorawan/cayenne-lpp).
 
 Downlink commands, encoded in Cayenne LLP format, can be sent at any time to change the state of the digital output or to activate the buzzer.
 
