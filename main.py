@@ -34,6 +34,7 @@ try:
     from exosense import ExoSense
     from exosense import thpa_const
     from cayenneLPP import cayenneLPP
+    from utils import time as time_utils
 
     _set_config('TEMP_OFFSET', 0)
     _set_config('ELEVATION', 0)
@@ -135,7 +136,7 @@ try:
         DI2_val = exo.DI2()
 
         if DI1_deb_val != DI1_val:
-            if time.ticks_diff(DI1_deb_ts, now) >= config.DI_DEBOUNCE_MS:
+            if time_utils.ticks_diff(now, DI1_deb_ts) >= config.DI_DEBOUNCE_MS:
                 DI1_deb_val = DI1_val
                 DI1_deb_ts = now
                 if DI1_val == 1:
@@ -147,7 +148,7 @@ try:
             DI1_deb_ts = now
 
         if DI2_deb_val != DI2_val:
-            if time.ticks_diff(DI2_deb_ts, now) >= config.DI_DEBOUNCE_MS:
+            if time_utils.ticks_diff(now, DI2_deb_ts) >= config.DI_DEBOUNCE_MS:
                 DI2_deb_val = DI2_val
                 DI2_deb_ts = now
                 if DI2_val == 1:
@@ -170,28 +171,28 @@ try:
             sound_max = sound_val
             sound_do_sample = True
 
-        if sound_do_sample or time.ticks_diff(last_sound_sample, now) >= 300:
+        if sound_do_sample or time_utils.ticks_diff(now, last_sound_sample) >= 300:
             if sound_samples < 10000:
                 sound_samples += 1
             sound_avg = (sound_avg * (sound_samples - 1) + sound_val) // sound_samples
             last_sound_sample = now
 
-        if (not config.MODE_TEST) and ftp.isrunning() and time.ticks_diff(start_time, now) >= 300000:
+        if (not config.MODE_TEST) and ftp.isrunning() and time_utils.ticks_diff(now, start_time) >= 300000:
             ftp.deinit()
             wlan.deinit()
             print('AP and FTP disabled')
 
-        if (not thpa_read_ok) or time.ticks_diff(last_thpa_read, now) >= 5000:
+        if (not thpa_read_ok) or time_utils.ticks_diff(now, last_thpa_read) >= 5000:
             print('Reading THPA')
             thpa_read_ok = exo.thpa.read()
             if thpa_read_ok:
                 wdt.feed()
                 last_thpa_read = now
 
-        if exo.buzzer() and time.ticks_diff(buzzer_start, now) >= buzzer_ms:
+        if exo.buzzer() and time_utils.ticks_diff(now, buzzer_start) >= buzzer_ms:
             exo.buzzer(0)
 
-        if thpa_read_ok and (last_send == None or time.ticks_diff(last_send, now) >= config.LORA_SEND_INTERVAL / 2):
+        if thpa_read_ok and (last_send == None or time_utils.ticks_diff(now, last_send) >= config.LORA_SEND_INTERVAL / 2):
             # Sleep random time up to 255 ms
             time.sleep_ms(crypto.getrandbits(32)[0])
 
