@@ -178,7 +178,7 @@ try:
             sound_avg = (sound_avg * (sound_samples - 1) + sound_val) // sound_samples
             last_sound_sample = now
 
-        if (not config.MODE_TEST) and ftp.isrunning() and time_utils.ticks_diff(now, start_time) >= 300000:
+        if (not config.MODE_TEST) and ftp.isrunning() and time_utils.ticks_diff(now, start_time) >= 600000:
             ftp.deinit()
             wlan.deinit()
             print('AP and FTP disabled')
@@ -274,7 +274,7 @@ try:
 except Exception as e:
     sys.print_exception(e)
     if last_send == None:
-        wdt.init(timeout=300000)
+        wdt.init(timeout=600000)
         wdt.feed()
         pycom.rgbled(0xffff00)
         wlan.deinit()
