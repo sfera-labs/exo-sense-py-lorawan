@@ -44,6 +44,11 @@ try:
     _set_config('MODE_TEST', False)
     _set_config('DI_DEBOUNCE_MS', 50)
     _set_config('LORA_STATE_PERSIST', True)
+    _set_config('LORA_RX_TIMEOUT', 0)
+
+    print('Config:')
+    for attr in dir(config):
+        print('    {} = {}'.format(attr, getattr(config, attr)))
 
     if config.MODE_TEST:
         pycom.wdt_on_boot(False)
@@ -114,6 +119,11 @@ try:
         config.LORA_SEND_INTERVAL = 10
     config.LORA_SEND_INTERVAL *= 1000
 
+    if config.LORA_RX_TIMEOUT > 0:
+        if config.LORA_RX_TIMEOUT < 10:
+            config.LORA_RX_TIMEOUT = 10
+        config.LORA_RX_TIMEOUT *= 60
+
     print("Waiting...")
     for i in range(3):
         time.sleep_ms(1000)
@@ -135,6 +145,7 @@ try:
     start_time = time.ticks_ms()
     last_thpa_read = start_time
     last_sound_sample = start_time
+    last_rx = time.time()
 
     print("Starting loop")
     pycom.rgbled(0x000000)
@@ -262,6 +273,7 @@ try:
             rx, port = s.recvfrom(16)
             if rx:
                 print('Received: {}, on port: {}'.format(rx, port))
+                last_rx = time.time()
                 if len(rx) == 4 and rx[3] == 0xff:
                     if rx[0] == 50:
                         buzzer_ms = int(((rx[1] & 0xff) << 8) + rx[2])
@@ -282,6 +294,10 @@ try:
 
         if wdt_update:
             wdt.feed()
+
+        if (config.LORA_RX_TIMEOUT > 0) and (time.time() - last_rx > config.LORA_RX_TIMEOUT):
+            print("RX Timeout!")
+            machine.reset()
 
 except Exception as e:
     sys.print_exception(e)

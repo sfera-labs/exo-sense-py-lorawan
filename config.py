@@ -29,4 +29,6 @@ FTP_PASSWORD = 'sense'
 AP_SSID = 'ExoSenseAP'
 AP_PASSWORD = 'exosense'
 
+LORA_RX_TIMEOUT = 0 # If set to a value > 0, the module is reset if no packet is received for this many minutes. Min value = 10
+
 MODE_TEST = False # Test mode
