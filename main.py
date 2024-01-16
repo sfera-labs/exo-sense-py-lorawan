@@ -30,6 +30,7 @@ try:
     import struct
     import crypto
     from network import WLAN
+    from network import Server
     from network import LoRa
     from exosense import ExoSense
     from exosense import thpa_const
@@ -43,6 +44,17 @@ try:
     _set_config('MODE_TEST', False)
     _set_config('DI_DEBOUNCE_MS', 50)
     _set_config('LORA_STATE_PERSIST', True)
+
+    if config.MODE_TEST:
+        pycom.wdt_on_boot(False)
+
+    wlan = WLAN()
+    wlan.deinit()
+
+    ftp = Server()
+    ftp.deinit()
+
+    time.sleep(1)
 
     if config.FTP_USER and config.FTP_PASSWORD:
         if config.AP_SSID and config.AP_PASSWORD:
@@ -108,7 +120,7 @@ try:
         time.sleep_ms(((crypto.getrandbits(32)[0] << 8) | crypto.getrandbits(32)[0]) % 3000)
         wdt.feed()
         try:
-            print("Sending", i)
+            print("Sending init frame", i)
             lpp.reset_payload()
             lpp.add_analog_input(i, channel=99)
             lpp.send()
