@@ -131,6 +131,7 @@ try:
 
     while True:
         now = time.ticks_ms()
+        wdt_update = False
 
         DI1_val = exo.DI1()
         DI2_val = exo.DI2()
@@ -186,7 +187,7 @@ try:
             print('Reading THPA')
             thpa_read_ok = exo.thpa.read()
             if thpa_read_ok:
-                wdt.feed()
+                wdt_update = True
                 last_thpa_read = now
 
         if exo.buzzer() and time_utils.ticks_diff(now, buzzer_start) >= buzzer_ms:
@@ -235,6 +236,7 @@ try:
                 sound_min = sound_max = sound_avg = sound_val
                 sound_samples = 1
             except OSError as e:
+                wdt_update = False
                 print("Send error:", e)
 
             if config.LORA_LED:
@@ -263,7 +265,11 @@ try:
         except TimeoutError:
             pass
         except Exception as e:
+            wdt_update = False
             print("Receive error:", e)
+
+        if wdt_update:
+            wdt.feed()
 
 except Exception as e:
     sys.print_exception(e)
